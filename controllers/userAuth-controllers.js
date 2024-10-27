@@ -11,11 +11,13 @@ const generateToken = (userId) => {
 const userRegister = async (req, res) => {
   console.log("userRegister got hitted");
   try {
-    const { userName, email, password } = req.body;
+    const { username, email, password } = req.body;
+if(!email){
 
+    return res.status(400).json({ message: "invalid crediantials" });
+}
     // checking for existing user
     const userExists = await user.findOne({ email });
-
     if (userExists) {
       return res.status(400).json({ message: "user already exists" });
     }
@@ -27,7 +29,7 @@ const userRegister = async (req, res) => {
     const userId = Math.floor(100000 + Math.random() * 90000);
 
     const newUser = await user.create({
-      userName,
+      userName:username,
       email,
       userId,
       password: hashedPassword,
